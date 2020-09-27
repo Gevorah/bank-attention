@@ -1,4 +1,4 @@
-package model;
+package datastructure;
 
 public interface IHash<K,V> {
 	public void put(K k, V v);

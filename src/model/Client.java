@@ -90,7 +90,6 @@ public class Client implements Comparable<Client> {
 
 	@Override
 	public int compareTo(Client o) {
-		
 			if (this.name.equals(o.getName()))		
 				return 0;
 			else if (this.name.compareTo(o.getName())>0) 

@@ -15,41 +15,39 @@ public class MinHeap<E extends Comparable<E>> implements IMinHeap<E> {
 
 	private static final int FRONT = 0; 
 
-	//@SuppressWarnings("unchecked")
 	public MinHeap(int maxsize) { 
 		this.maxsize = maxsize; 
 		this.size = 0; 
 		heap = new Array<E>(this.maxsize+1);
-		//heap.set(0,(E) new String(""+Integer.MIN_VALUE));
 	} 
-	private int parent(int pos) {return pos/2;} 
+	private int parent(int index) {return (index-1)/2;} 
 
-	private int leftChild(int pos) {return (2*pos)+1;} 
+	private int leftChild(int index) {return (2*index)+1;} 
 
-	private int rightChild(int pos)	{return (2*pos)+2;} 
+	private int rightChild(int index) {return (2*index)+2;} 
 
-	private boolean isLeaf(int pos)	{ 
-		if(pos>=(size/2) && pos<=size) {return true;} 
-		return false; 
+	private boolean isLeaf(int index) { 
+		if(index>=(size/2) && index<=size) return true; 
+		else return false; 
 	} 
 
 	private void swap(int fpos, int spos) { 
-		E tmp; 
-		tmp = heap.get(fpos); 
+		E tmp = heap.get(fpos); 
 		heap.set(fpos, heap.get(spos)); 
 		heap.set(spos, tmp); 
 	} 
  
-	private void minHeapify(int pos) { 
-		if (!isLeaf(pos)) { 
-			if (heap.get(pos).compareTo(heap.get(leftChild(pos)))>0 
-				|| heap.get(pos).compareTo(heap.get(rightChild(pos)))>0) { 
-				if (heap.get(leftChild(pos)).compareTo(heap.get(rightChild(pos)))<0) { 
-					swap(pos, leftChild(pos)); 
-					minHeapify(leftChild(pos)); 
+	private void minHeapify(int index) { 
+		if(!isLeaf(index)) { 
+			if(heap.get(index).compareTo(heap.get(leftChild(index)))>0 || 
+				(heap.get(leftChild(index))==null && 
+				heap.get(index).compareTo(heap.get(rightChild(index)))>0) ) { 
+				if(heap.get(leftChild(index)).compareTo(heap.get(rightChild(index)))<0) { 
+					swap(index, leftChild(index)); 
+					minHeapify(leftChild(index)); 
 				} else { 
-					swap(pos, rightChild(pos)); 
-					minHeapify(rightChild(pos)); 
+					swap(index, rightChild(index)); 
+					minHeapify(rightChild(index)); 
 				} 
 			} 
 		} 
@@ -60,26 +58,27 @@ public class MinHeap<E extends Comparable<E>> implements IMinHeap<E> {
 			heap.set(size++,element);
 			return;
 		}
-		if (size >= maxsize) {return;} 
+		if(size>=maxsize) {return;} 
 		heap.set(size, element); 
 		int current = size++; 
-		while(heap.get(current).compareTo(heap.get(parent(current))) < 0) { 
+		while(heap.get(parent(current)).compareTo(heap.get(current))>0) { 
 			swap(current, parent(current)); 
 			current = parent(current); 
-		} 
+		}
 	} 
 
 	public void print() { 
+		System.out.println(heap.get(0));
 		for (int i=0; i <= size/2; i++) { 
-			System.out.print(" PARENT : " + heap.get(i) + " LEFT CHILD : " + heap.get(leftChild(i)) + " RIGHT CHILD :" + heap.get(rightChild(i)));
-			System.out.println(); 
+			if(heap.get(leftChild(i))!=null)System.out.print(heap.get(leftChild(i)));
+			System.out.println();
+			if(heap.get(rightChild(i))!=null)System.out.println(heap.get(rightChild(i)));
+			
 		} 
 	} 
 
-	// Function to build the min heap using 
-	// the minHeapify 
 	public void minHeap() { 
-		for (int pos = (size / 2); pos >= 1; pos--) { 
+		for (int pos = (size/2)-1; pos>=0; pos--) { 
 			minHeapify(pos); 
 		} 
 	} 
@@ -101,6 +100,10 @@ public class MinHeap<E extends Comparable<E>> implements IMinHeap<E> {
 		a.insert("B");
 		a.insert("C");
 		a.insert("D");
+		a.extractMin();
+		a.print();
+		a.extractMin();
+		a.print();
 		a.extractMin();
 		a.print();
 	}

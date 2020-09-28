@@ -10,7 +10,11 @@ public class Client implements Comparable<Client> {
 	private double valueAccount;
 	private String creditCardPayDate;
 	private String startDate;
-
+	
+	public Client(String name, String cc) {
+		this.name=name;
+		this.cc=cc;
+	}
 	public Client(String name, String cc, String account, boolean creditCard, boolean debitCard, double valueAccount,
 			String creditCardPayDate, String startDate) {
 		super();
@@ -90,12 +94,12 @@ public class Client implements Comparable<Client> {
 
 	@Override
 	public int compareTo(Client o) {
-			if (this.name.equals(o.getName()))		
-				return 0;
-			else if (this.name.compareTo(o.getName())>0) 
-				return 1;
-			else 
-				return -1;
+		if (this.name.equals(o.getName()))		
+			return 0;
+		else if (this.name.compareTo(o.getName())>0) 
+			return 1;
+		else 
+			return -1;
 	}
 
 }

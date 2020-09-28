@@ -1,18 +1,18 @@
 package datastructure;
 
-public class Queue<T1,T2> implements QueueInterface<T1,T2> {
+public class Queue<T1 extends Comparable<T1>,T2 extends Comparable<T2>> implements IQueue<T1,T2> {
 
-	public class Node<T1,T2> {
-		T1 t1;
-		T2 t2;
+	public class Node<E1 extends Comparable<T1>,E2 extends Comparable<T2>> {
+		E1 e1;
+		E2 e2;
 		Node<T1,T2> next;
 
-		public Node(T1 t1, T2 t2) {
-			this.t1=t1;
-			this.t2=t2;
+		public Node(E1 e1, E2 e2) {
+			this.e1=e1;
+			this.e2=e2;
 		}
-		public T1 getT1() {return t1;};
-		public T2 getT2() {return t2;};
+		public E1 getT1() {return e1;};
+		public E2 getT2() {return e2;};
 	}
 
 	Node<T1,T2> first;

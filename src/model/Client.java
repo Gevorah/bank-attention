@@ -11,6 +11,9 @@ public class Client implements Comparable<Client> {
 	private String creditCardPayDate;
 	private String startDate;
 	
+	public Client(int value) {
+		valueAccount = value;
+	}
 	public Client(String name, String cc) {
 		this.name=name;
 		this.cc=cc;
@@ -94,12 +97,16 @@ public class Client implements Comparable<Client> {
 
 	@Override
 	public int compareTo(Client o) {
-		if (this.name.equals(o.getName()))		
-			return 0;
-		else if (this.name.compareTo(o.getName())>0) 
+		if(this.cc.compareTo(o.getCc())>0) {
 			return 1;
-		else 
+		}else if(this.cc.compareTo(o.getCc())<0) {
 			return -1;
+		}else return 0;
 	}
 
+	
+	@Override
+	public String toString() {
+		return cc;
+	}
 }

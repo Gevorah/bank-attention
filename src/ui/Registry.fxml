@@ -40,8 +40,16 @@
             <Font name="Berlin Sans FB" size="18.0" />
          </font>
       </Label>
-      <TextField fx:id="NameReg" layoutX="327.0" layoutY="141.0" />
-      <TextField fx:id="idReg" layoutX="327.0" layoutY="187.0" />
       <TextField fx:id="ValueReg" layoutX="327.0" layoutY="238.0" />
+      <Label fx:id="idReg" layoutX="319.0" layoutY="189.0" text="id" textFill="WHITE">
+         <font>
+            <Font name="Berlin Sans FB" size="18.0" />
+         </font>
+      </Label>
+      <Label fx:id="nameReg" layoutX="319.0" layoutY="143.0" text="Name" textFill="WHITE">
+         <font>
+            <Font name="Berlin Sans FB" size="18.0" />
+         </font>
+      </Label>
    </children>
 </Pane>

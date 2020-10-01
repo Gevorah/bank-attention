@@ -1,8 +1,9 @@
 package ui;
 
 import java.io.IOException;
-
 import CustomException.InvalidInformationException;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -15,8 +16,10 @@ import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import javafx.scene.control.ToggleGroup;
 import javafx.scene.control.Alert.AlertType;
+import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.BorderPane;
 import model.Bank;
+import model.Client;
 
 public class BankGUI {
 
@@ -38,19 +41,19 @@ public class BankGUI {
 	private ToggleGroup Trasactison;
 
 	@FXML
-	private TableView<?> information;
+	private TableView<Client> information;
 
 	@FXML
-	private TableColumn<?, ?> ColumnName;
+	private TableColumn<Client, String> ColumnName;
 
 	@FXML
-	private TableColumn<?, ?> columnId;
+	private TableColumn<Client, String> columnId;
 
 	@FXML
-	private TableColumn<?, ?> ColumTime;
+	private TableColumn<Client, String> ColumTime;
 
 	@FXML
-	private TableColumn<?, ?> ColumnAmount;
+	private TableColumn<Client, Double> ColumnAmount;
 
 	@FXML
 	private TextField TFname;
@@ -71,16 +74,28 @@ public class BankGUI {
 	private TextField ValueC;
 
 	@FXML
-	private TextField NameReg;
+	private Label idReg;
 
 	@FXML
-	private TextField idReg;
+	private Label nameReg;
 
 	@FXML
 	private TextField ValueReg;
 
 	@FXML
 	private Label generalQ;
+
+	@FXML
+	private Label preferenceQ;
+
+	@FXML
+	private RadioButton Qpreferencial;
+
+	@FXML
+	private ToggleGroup selectQueue;
+
+	@FXML
+	private RadioButton Qgeneral;
 
 	public BankGUI(Bank bank) {
 
@@ -90,26 +105,37 @@ public class BankGUI {
 	@FXML
 	void registry(ActionEvent event) throws IOException {
 
-		String name = NameReg.getText();
+		String name = nameReg.getText();
 		String id = idReg.getText();
 		double value = Double.parseDouble(ValueReg.getText());
-		
+
 		boolean registred = main.addUser(name, id, value);
-		
+
 		if (registred == true) {
 			Alert alert = new Alert(AlertType.WARNING);
 			alert.setTitle(null);
 			alert.setContentText("user successfully registered");
 			alert.showAndWait();
 
-			showWindowQueue(null);
-			generalQ.setText(main.showQueue());
-			
-			
+			String queue = ((RadioButton) selectQueue.getSelectedToggle()).getText();
+
+			if (queue.equals("Preferencial")) {
+				System.out.println(name);
+				main.addToPriorityQueue(name, id);
+				showWindowQueue(null);
+
+			} else if (queue.equals("General")) {
+				System.out.println(name);
+				System.out.println(id);
+				main.addToNormalQeueu(name, id);
+				showWindowQueue(null);
+
+			}
+
 		}
 
 	}
-	
+
 	public void showWindowQueue(ActionEvent event) throws IOException {
 
 		FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("QueueWindow.fxml"));
@@ -119,8 +145,11 @@ public class BankGUI {
 		mainPanel.getChildren().clear();
 		mainPanel.setCenter(setting);
 
-	} 
-	
+		preferenceQ.setText(main.showPriorityQueue());
+		generalQ.setText(main.showNormalQueue());
+
+	}
+
 	public void showTrasactionWindow(ActionEvent event) throws IOException {
 
 		FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("TransactionWindow.fxml"));
@@ -130,8 +159,10 @@ public class BankGUI {
 		mainPanel.getChildren().clear();
 		mainPanel.setCenter(setting);
 
-	} 
-	
+		nameUser.setText(main.getClient().getName());
+		identificationUser.setText(main.getClient().getCc());
+	}
+
 	public void showUserWindow(ActionEvent event) throws IOException {
 
 		FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("UserWindow.fxml"));
@@ -141,20 +172,35 @@ public class BankGUI {
 		mainPanel.getChildren().clear();
 		mainPanel.setCenter(setting);
 
-	} 
+	}
 
-	@FXML
-	void Consignment(ActionEvent event) {
+	public void showRegistry(ActionEvent event) throws IOException {
 
-		double value = Double.parseDouble(ValueC.getText());
-		main.consignation(value);
+		FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("Registry.fxml"));
+		fxmlLoader.setController(this);
+		Parent setting = fxmlLoader.load();
+
+		mainPanel.getChildren().clear();
+		mainPanel.setCenter(setting);
+
 	}
 
 	@FXML
-	void Withdrawal(ActionEvent event) {
+	void Consignment(ActionEvent event) throws IOException {
+
+		double value = Double.parseDouble(ValueC.getText());
+		main.consignation(value);
+		main.refresh();
+		showTrasactionWindow(null);
+	}
+
+	@FXML
+	void Withdrawal(ActionEvent event) throws IOException {
 
 		double value = Double.parseDouble(ValueW.getText());
-		 main.retirement(value);
+		main.retirement(value);
+		main.refresh();
+		showTrasactionWindow(null);
 	}
 
 	@FXML
@@ -165,22 +211,26 @@ public class BankGUI {
 
 	@FXML
 	void byAmount(ActionEvent event) {
-
+		main.sortByValue();
+		initializeScores();
 	}
 
 	@FXML
 	void byId(ActionEvent event) {
-
+		main.sortByCC();
+		initializeScores();
 	}
 
 	@FXML
 	void byName(ActionEvent event) {
 		main.sortByNombreAtoZ();
+		initializeScores();
 	}
 
 	@FXML
 	void byTime(ActionEvent event) {
-
+		main.sortByStartDate();
+		initializeScores();
 	}
 
 	@FXML
@@ -188,6 +238,7 @@ public class BankGUI {
 
 		String name = TFname.getText();
 		String id = TFid.getText();
+		String queue = ((RadioButton) selectQueue.getSelectedToggle()).getText();
 
 		try {
 
@@ -196,19 +247,22 @@ public class BankGUI {
 
 			if (found == true) {
 
-				showWindowQueue(null);
+				if (queue.equals("Preferencial")) {
 
-				main.addToQeueu(NameReg.getText(), idReg.getText());
-				generalQ.setText(main.showQueue());
+					main.addToPriorityQueue(name, id);
+					showWindowQueue(null);
+
+				} else if (queue.equals("General")) {
+					main.addToNormalQeueu(name, id);
+					showWindowQueue(null);
+				}
 
 			} else if (found == false) {
 
-				FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("Registry.fxml"));
-				fxmlLoader.setController(this);
-				Parent setting = fxmlLoader.load();
+				showRegistry(null);
 
-				mainPanel.getChildren().clear();
-				mainPanel.setCenter(setting);
+				idReg.setText(id);
+				nameReg.setText(name);
 
 			}
 
@@ -238,7 +292,7 @@ public class BankGUI {
 			mainPanel.setCenter(setting);
 
 			AccountValue.setText(String.valueOf(main.getClient().getValueAccount()));
-			
+
 		} else if (trasactison.equals("Consignment")) {
 
 			FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("Consignment.fxml"));
@@ -252,18 +306,46 @@ public class BankGUI {
 
 		} else if (trasactison.equals("Account cancelation")) {
 
+			main.accountCancelation();
 			Alert alert = new Alert(AlertType.WARNING);
 			alert.setTitle(null);
 			alert.setContentText("Account has been deleted");
 			alert.showAndWait();
+			showTrasactionWindow(null);
 
 		} else if (trasactison.equals("Card payment")) {
 
+			double value = main.payCard();
+			Alert alert = new Alert(AlertType.WARNING);
+			alert.setTitle(null);
+			alert.setContentText(String.valueOf(value));
+			alert.showAndWait();
+			showTrasactionWindow(null);
 		}
 	}
 
 	@FXML
 	void undoButtom(ActionEvent event) {
+
+		double con = 0;
+		double whit = 0;
+		if (ValueC==null) {
+			con = 0;
+		} else {
+			con = Double.parseDouble(ValueC.getText());
+		}
+
+		if (ValueW==null) {
+			whit = 0;
+		} else {
+			whit = Double.parseDouble(ValueW.getText());
+		}
+		
+		main.reverseAction(con, whit);
+		Alert alert = new Alert(AlertType.WARNING);
+		alert.setTitle(null);
+		alert.setContentText(String.valueOf("reversed action"));
+		alert.showAndWait();
 
 	}
 
@@ -276,13 +358,15 @@ public class BankGUI {
 		mainPanel.getChildren().clear();
 		mainPanel.setCenter(setting);
 
+		main.init();
+
 	}
 
 	@FXML
 	void Attend(ActionEvent event) throws IOException {
-		
+		System.out.println("metodoattent");
 		showWindowQueue(null);
-		generalQ.setText(main.showQueue());
+		// generalQ.setText(main.showNormalQueue());
 	}
 
 	@FXML
@@ -294,18 +378,21 @@ public class BankGUI {
 	@FXML
 	void BackToMain(ActionEvent event) throws IOException {
 
-		loadSettinWindow(null);
+		showWindowQueue(null);
 	}
 
 	@FXML
 	void AGeneral(ActionEvent event) throws IOException {
 
+		main.attendGeneral();
 		showTrasactionWindow(null);
+
 	}
 
 	@FXML
 	void APreferential(ActionEvent event) throws IOException {
 
+		main.attendPriority();
 		showTrasactionWindow(null);
 	}
 
@@ -315,8 +402,28 @@ public class BankGUI {
 		FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("InformationWindow.fxml"));
 		fxmlLoader.setController(this);
 		Parent setting = fxmlLoader.load();
-
 		mainPanel.getChildren().clear();
 		mainPanel.setCenter(setting);
+
 	}
+
+	public void initialize() throws Exception {
+		if (information != null) {
+			initializeScores();
+		}
+
+	}
+
+	public void initializeScores() {
+		ObservableList<Client> observableList;
+		observableList = FXCollections.observableArrayList(main.getList());
+
+		information.setItems(observableList);
+		ColumnName.setCellValueFactory(new PropertyValueFactory<Client, String>("name"));
+		columnId.setCellValueFactory(new PropertyValueFactory<Client, String>("cc"));
+		ColumTime.setCellValueFactory(new PropertyValueFactory<Client, String>("startDate"));
+		ColumnAmount.setCellValueFactory(new PropertyValueFactory<Client, Double>("valueAccount"));
+
+	}
+
 }

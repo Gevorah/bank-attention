@@ -1,5 +1,7 @@
 package datastructure;
 
+import java.util.PriorityQueue;
+
 public class MinHeap<E extends Comparable<E>> implements IMinHeap<E> {
 	public class Array<T>{
 		private Object[] elements;
@@ -39,9 +41,8 @@ public class MinHeap<E extends Comparable<E>> implements IMinHeap<E> {
  
 	private void minHeapify(int index) { 
 		if(!isLeaf(index)) { 
-			if(heap.get(index).compareTo(heap.get(leftChild(index)))>0 || 
-				(heap.get(leftChild(index))==null && 
-				heap.get(index).compareTo(heap.get(rightChild(index)))>0) ) { 
+			if((heap.get(rightChild(index))!=null && heap.get(index).compareTo(heap.get(leftChild(index)))>0) || 
+				(heap.get(rightChild(index))!=null && heap.get(index).compareTo(heap.get(rightChild(index)))>0)) { 
 				if(heap.get(leftChild(index)).compareTo(heap.get(rightChild(index)))<0) { 
 					swap(index, leftChild(index)); 
 					minHeapify(leftChild(index)); 
@@ -49,7 +50,7 @@ public class MinHeap<E extends Comparable<E>> implements IMinHeap<E> {
 					swap(index, rightChild(index)); 
 					minHeapify(rightChild(index)); 
 				} 
-			} 
+			}
 		} 
 	} 
 
@@ -67,14 +68,13 @@ public class MinHeap<E extends Comparable<E>> implements IMinHeap<E> {
 		}
 	} 
 
-	public void print() { 
-		System.out.println(heap.get(0));
+	public String print() { 
+		String show = heap.get(0).toString();
 		for (int i=0; i <= size/2; i++) { 
-			if(heap.get(leftChild(i))!=null)System.out.print(heap.get(leftChild(i)));
-			System.out.println();
-			if(heap.get(rightChild(i))!=null)System.out.println(heap.get(rightChild(i)));
-			
-		} 
+			if(heap.get(leftChild(i))!=null) show += heap.get(leftChild(i)).toString();
+			if(heap.get(rightChild(i))!=null)show += "\n"+heap.get(rightChild(i)).toString();
+		}
+		return show;
 	} 
 
 	public void minHeap() { 
@@ -94,17 +94,9 @@ public class MinHeap<E extends Comparable<E>> implements IMinHeap<E> {
 	public E minimum() {
 		return heap.get(0);
 	}
-	public static void main(String[] args) {
-		MinHeap<String> a = new MinHeap<String>(10);
-		a.insert("A");
-		a.insert("B");
-		a.insert("C");
-		a.insert("D");
-		a.extractMin();
-		a.print();
-		a.extractMin();
-		a.print();
-		a.extractMin();
-		a.print();
+	
+	public int size() {
+		return size;
 	}
+	
 }

@@ -14,7 +14,7 @@
             <Image url="@../../img/fondo%20app.png" />
          </image>
       </ImageView>
-      <Button layoutX="286.0" layoutY="393.0" mnemonicParsing="false" onAction="#BackToMain" text="Back">
+      <Button layoutX="286.0" layoutY="393.0" mnemonicParsing="false" onAction="#back" text="Back">
          <font>
             <Font name="Berlin Sans FB" size="18.0" />
          </font>
@@ -45,6 +45,11 @@
          </font>
       </Button>
       <Label fx:id="generalQ" layoutX="191.0" layoutY="180.0" text="General" textFill="WHITE">
+         <font>
+            <Font name="Berlin Sans FB" size="18.0" />
+         </font>
+      </Label>
+      <Label fx:id="preferenceQ" layoutX="429.0" layoutY="180.0" text="Preference" textFill="WHITE">
          <font>
             <Font name="Berlin Sans FB" size="18.0" />
          </font>

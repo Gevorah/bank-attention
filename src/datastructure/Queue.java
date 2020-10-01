@@ -52,13 +52,14 @@ public class Queue<T1 extends Comparable<T1>,T2 extends Comparable<T2>> implemen
 		else return first;
 	}
 
-	 public String print() {
-		 String list="";
-		 Node<T1,T2> curr = first;
-	        while (curr!=null) {
-	            list=( curr.getT2()+"\n");
-	            curr=curr.next;
-	        }
-	       return list;
-	    }
+	public String print() {
+		String list="";
+		Node<T1,T2> curr = first;
+		while (curr!=null) {
+			//System.out.println(curr.getT2());
+			list+=(curr.getT2()+"\n");
+			curr=curr.next;
+		}
+		return list;
+	}
 }

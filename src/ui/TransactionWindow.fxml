@@ -16,7 +16,7 @@
             <Image url="@../../img/fondo%20app.png" />
          </image>
       </ImageView>
-      <Button layoutX="337.0" layoutY="387.0" mnemonicParsing="false" onAction="#operationButton" text="Enter">
+      <Button layoutX="426.0" layoutY="387.0" mnemonicParsing="false" onAction="#operationButton" text="Enter">
          <font>
             <Font name="Berlin Sans FB" size="18.0" />
          </font>
@@ -59,7 +59,7 @@
             <Font name="Berlin Sans FB" size="18.0" />
          </font>
       </RadioButton>
-      <Button layoutX="217.0" layoutY="387.0" mnemonicParsing="false" onAction="#undoButtom" text="Correction">
+      <Button layoutX="273.0" layoutY="387.0" mnemonicParsing="false" onAction="#undoButtom" text="Correction">
          <font>
             <Font name="Berlin Sans FB" size="18.0" />
          </font>
@@ -69,5 +69,10 @@
             <Font name="Berlin Sans FB" size="18.0" />
          </font>
       </RadioButton>
+      <Button layoutX="101.0" layoutY="387.0" mnemonicParsing="false" onAction="#BackToMain" text="Show Queue">
+         <font>
+            <Font name="Berlin Sans FB" size="18.0" />
+         </font>
+      </Button>
    </children>
 </Pane>

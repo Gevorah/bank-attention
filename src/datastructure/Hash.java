@@ -93,14 +93,13 @@ public class Hash<K,V> implements IHash<K,V>{
 
     public int size() {return size;}
     public boolean isEmpty() {return size == 0;}
-    public ArrayList<?> toArrayList(){
+    public ArrayList<V> toArrayList(){
     	ArrayList<V> list = new ArrayList<>();
-    	for(Node<K,V> tmp:slots) {
-    		list.add(tmp.getValue());
-    	}
+    	for(Node<K,V> tmp:slots) if(tmp!=null)list.add(tmp.getValue());
     	return list;
     }
 	
+	@SuppressWarnings("hiding")
 	public class Node<K,V> {
 		private K key;
 		private V value;
@@ -119,12 +118,5 @@ public class Hash<K,V> implements IHash<K,V>{
 
 	    public Node<K,V> getNext() {return next;}
 	    public void setNext(Node<K,V> next) {this.next=next;}
-	}
-	public static void main(String[] args) {
-		Hash<String,String> h = new Hash<>();
-		h.put("A","Hola");
-		h.put("B", "Mundo");
-		h.remove("B");
-		System.out.println(h.get("B"));
 	}
 }

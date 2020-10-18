@@ -1,7 +1,5 @@
 package datastructure;
 
-import java.util.PriorityQueue;
-
 public class MinHeap<E extends Comparable<E>> implements IMinHeap<E> {
 	public class Array<T>{
 		private Object[] elements;

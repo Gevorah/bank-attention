@@ -41,7 +41,7 @@ public class Main extends Application {
 		stage.setTitle("Main Window");
 		bankGUI.loadSettinWindow(null);
 		stage.show();
-
+		
 	}
 
 

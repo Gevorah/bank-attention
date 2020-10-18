@@ -2,6 +2,7 @@ package ui;
 
 import java.io.IOException;
 import CustomException.InvalidInformationException;
+import CustomException.InvalidNegativeValueException;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -100,6 +101,7 @@ public class BankGUI {
 	public BankGUI(Bank bank) {
 
 		main = bank;
+		main.init();
 	}
 
 	@FXML
@@ -195,12 +197,19 @@ public class BankGUI {
 	}
 
 	@FXML
-	void Withdrawal(ActionEvent event) throws IOException {
+	void Withdrawal(ActionEvent event) throws IOException, InvalidNegativeValueException {
+		try {
+			double value = Double.parseDouble(ValueW.getText());
+			main.retirement(value);
+			main.refresh();
+			showTrasactionWindow(null);
+		} catch (InvalidNegativeValueException e) {
+			Alert alert = new Alert(AlertType.WARNING);
+			alert.setTitle(null);
+			alert.setContentText(e.message());
+			alert.showAndWait();
+		}
 
-		double value = Double.parseDouble(ValueW.getText());
-		main.retirement(value);
-		main.refresh();
-		showTrasactionWindow(null);
 	}
 
 	@FXML
@@ -236,12 +245,10 @@ public class BankGUI {
 	@FXML
 	void Enter(ActionEvent event) throws IOException {
 
-		String name = TFname.getText();
-		String id = TFid.getText();
-		String queue = ((RadioButton) selectQueue.getSelectedToggle()).getText();
-
 		try {
-
+			String name = TFname.getText();
+			String id = TFid.getText();
+			String queue = ((RadioButton) selectQueue.getSelectedToggle()).getText();
 			main.CheckUser(name, id);
 			boolean found = main.searchClient(id);
 
@@ -266,13 +273,18 @@ public class BankGUI {
 
 			}
 
-		} catch (InvalidInformationException iv) {
+		} catch (InvalidInformationException e) {
 
 			Alert alert = new Alert(AlertType.WARNING);
 			alert.setTitle(null);
-			alert.setContentText(iv.message());
+			alert.setContentText(e.message());
 			alert.showAndWait();
 
+		} catch (NullPointerException e) {
+			Alert alert = new Alert(AlertType.WARNING);
+			alert.setTitle(null);
+			alert.setContentText("You have not selected a valid option");
+			alert.showAndWait();
 		}
 
 	}
@@ -311,7 +323,7 @@ public class BankGUI {
 			alert.setTitle(null);
 			alert.setContentText("Account has been deleted");
 			alert.showAndWait();
-			showTrasactionWindow(null);
+			showWindowQueue(null);
 
 		} else if (trasactison.equals("Card payment")) {
 
@@ -329,18 +341,18 @@ public class BankGUI {
 
 		double con = 0;
 		double whit = 0;
-		if (ValueC==null) {
+		if (ValueC == null) {
 			con = 0;
 		} else {
 			con = Double.parseDouble(ValueC.getText());
 		}
 
-		if (ValueW==null) {
+		if (ValueW == null) {
 			whit = 0;
 		} else {
 			whit = Double.parseDouble(ValueW.getText());
 		}
-		
+
 		main.reverseAction(con, whit);
 		Alert alert = new Alert(AlertType.WARNING);
 		alert.setTitle(null);
@@ -358,7 +370,7 @@ public class BankGUI {
 		mainPanel.getChildren().clear();
 		mainPanel.setCenter(setting);
 
-		main.init();
+		
 
 	}
 
@@ -399,6 +411,10 @@ public class BankGUI {
 	@FXML
 	void List(ActionEvent event) throws IOException {
 
+		Alert alert = new Alert(AlertType.WARNING);
+		alert.setTitle(null);
+		alert.setContentText("retired people \n" + main.showDowns());
+		alert.showAndWait();
 		FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("InformationWindow.fxml"));
 		fxmlLoader.setController(this);
 		Parent setting = fxmlLoader.load();
@@ -411,6 +427,8 @@ public class BankGUI {
 		if (information != null) {
 			initializeScores();
 		}
+		
+	
 
 	}
 

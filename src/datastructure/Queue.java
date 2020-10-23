@@ -62,4 +62,8 @@ public class Queue<T1 extends Comparable<T1>,T2 extends Comparable<T2>> implemen
 		}
 		return list;
 	}
+	
+	public Node<T1,T2> getFirst(){
+		return first;
+	}
 }

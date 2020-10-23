@@ -78,7 +78,7 @@ public class MinHeap<E extends Comparable<E>> implements IMinHeap<E> {
 	public void minHeap() { 
 		for (int pos = (size/2)-1; pos>=0; pos--) { 
 			minHeapify(pos); 
-		} 
+		}
 	} 
 
 	public E extractMin() { 

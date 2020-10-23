@@ -5,7 +5,13 @@ public class MinHeap<E extends Comparable<E>> implements IMinHeap<E> {
 		private Object[] elements;
 		public Array(int size) {elements = new Object[size];}
 		@SuppressWarnings("unchecked")
-		public T get(int i) {return (T)elements[i];};
+		public T get(int i) {
+			try{
+				return (T)elements[i];
+			}catch(ArrayIndexOutOfBoundsException e) {
+				return null;
+			}
+		}
 		public void set(int i, T t) {elements[i]=t;};
 	}
 
@@ -31,13 +37,13 @@ public class MinHeap<E extends Comparable<E>> implements IMinHeap<E> {
 		else return false; 
 	} 
 
-	private void swap(int fpos, int spos) { 
+	protected void swap(int fpos, int spos) { 
 		E tmp = heap.get(fpos); 
 		heap.set(fpos, heap.get(spos)); 
 		heap.set(spos, tmp); 
 	} 
  
-	private void minHeapify(int index) { 
+	protected void minHeapify(int index) { 
 		if(!isLeaf(index)) { 
 			if((heap.get(rightChild(index))!=null && heap.get(index).compareTo(heap.get(leftChild(index)))>0) || 
 				(heap.get(rightChild(index))!=null && heap.get(index).compareTo(heap.get(rightChild(index)))>0)) { 
@@ -67,10 +73,10 @@ public class MinHeap<E extends Comparable<E>> implements IMinHeap<E> {
 	} 
 
 	public String print() { 
-		String show = heap.get(0).toString();
+		String show = heap.get(0).toString()+"\n";
 		for (int i=0; i <= size/2; i++) { 
-			if(heap.get(leftChild(i))!=null) show += heap.get(leftChild(i)).toString();
-			if(heap.get(rightChild(i))!=null)show += "\n"+heap.get(rightChild(i)).toString();
+			if(heap.get(leftChild(i))!=null) show += heap.get(leftChild(i)).toString()+"\n";
+			if(heap.get(rightChild(i))!=null)show += heap.get(rightChild(i)).toString()+"\n";
 		}
 		return show;
 	} 

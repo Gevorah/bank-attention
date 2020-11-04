@@ -370,8 +370,6 @@ public class BankGUI {
 		mainPanel.getChildren().clear();
 		mainPanel.setCenter(setting);
 
-		
-
 	}
 
 	@FXML
